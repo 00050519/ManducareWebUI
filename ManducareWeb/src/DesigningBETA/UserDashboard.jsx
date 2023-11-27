@@ -123,7 +123,7 @@ const UserDashboard = () => {
   ];
 
   return (
-<div className="min-h-screen">
+  <div className="min-h-screen">
       {/* Navbar Section */}
       <nav className="bg-pink-600 p-4 text-white flex justify-between items-center">
         <div className="flex items-center space-x-4">

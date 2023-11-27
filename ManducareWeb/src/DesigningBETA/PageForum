@@ -1,0 +1,174 @@
+import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import logo from '../assets/logomandu.png';
+
+const Navbar = ({ userData, handleReload }) => {
+  return (
+    <nav className="bg-pink-600 p-4 text-white flex justify-between items-center">
+      <div className="flex items-center space-x-4">
+        <img
+          src={logo}  // Adjust the path based on your project structure
+          alt="Logo"
+          className="w-8 h-8 rounded-full mr-2 object-cover"
+        />
+        <img
+          src={userData.profilePicture}
+          alt="Profile"
+          className="w-8 h-8 rounded-full mr-2 object-cover"
+        />
+        <span>{userData.username}</span>
+        <button onClick={handleReload} className="hover:underline focus:outline-none hover:text-gray-300 transition duration-300 ease-in-out">
+          Home
+        </button>
+        <button className="hover:underline focus:outline-none hover:text-gray-300 transition duration-300 ease-in-out">
+          Nutricionistas
+        </button>
+        <button className="hover:underline focus:outline-none hover:text-gray-300 transition duration-300 ease-in-out">
+          Forum
+        </button>
+      </div>
+      <div className="flex items-center space-x-4">
+        {/* Search Bar */}
+        <input
+          type="text"
+          placeholder="Search..."
+          className="border p-2 rounded-md text-black"
+        />
+        <button className="bg-white text-pink-600 px-3 py-1 rounded-md hover:bg-pink-200 transition duration-300 focus:outline-none">
+          Logout
+        </button>
+      </div>
+    </nav>
+  );
+};
+
+const userData = {
+    username: 'JohnDoe',
+    profilePicture: 'https://source.unsplash.com/40x40/?person',
+  };
+const ForumDetail = ({ post, onClose }) => {
+  const [newComment, setNewComment] = useState('');
+
+  const handleAddComment = () => {
+    // Placeholder for adding comments logic
+    console.log('Adding comment:', newComment);
+  };
+
+  return (
+    <div className="forum-detail p-4 border bg-white w-1/2">
+      {/* Adjust the 'w-192' class to your desired width */}
+      <h3 className="text-xl font-bold">{post.user}</h3>
+      <h4 className="text-lg font-semibold">{post.topic}</h4>
+      <p className="text-gray-700">{post.content}</p>
+      <h5 className="text-lg font-semibold mt-4">Comentarios:</h5>
+      <ul>
+        {post.comments.map((comment, index) => (
+          <li key={index} className="text-gray-700">
+            <strong>{comment.user}:</strong> {comment.comment}
+          </li>
+        ))}
+      </ul>
+      {/* Design for the input box and button */}
+      <div className="mt-4">
+        <input
+          type="text"
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          placeholder="Agregar comentario..."
+          className="w-3/4 p-1 border rounded-md"
+        />
+        <button
+          onClick={handleAddComment}
+          className="bg-blue-500 text-white px-2 py-1 rounded-md ml"
+        >
+          Agregar Comentario
+        </button>
+      </div>
+      <button
+        onClick={onClose}
+        className="bg-gray-500 text-white px-2 py-1 rounded-md mt-2"
+      >
+        Cerrar
+      </button>
+    </div>
+  );
+};
+
+const PageForum = () => {
+  const [posts, setPosts] = useState([
+    {
+      id: 1,
+      user: 'Usuario1',
+      topic: 'Tema 1',
+      content: 'Contenido del foro 1...',
+      preview: 'Vista corta del foro 1...',
+      likes: 5,
+      comments: [
+        { user: 'UsuarioA', comment: 'Comentario 1' },
+        { user: 'UsuarioB', comment: 'Comentario 2' },
+      ],
+    },
+    // Agrega más publicaciones según sea necesario
+  ]);
+
+  const [selectedPost, setSelectedPost] = useState(null);
+
+  const handleLike = (postId) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId ? { ...post, likes: post.likes + 1 } : post
+      )
+    );
+  };
+
+  const handlePostClick = (postId) => {
+    const selectedPost = posts.find((post) => post.id === postId);
+    setSelectedPost(selectedPost);
+  };
+
+  const handleCloseDetail = () => {
+    setSelectedPost(null);
+  };
+  const handleReload = () => {
+    window.location.reload();
+  };
+
+  return (
+    <div>
+      <Navbar userData={userData} handleReload={handleReload} />
+
+      {posts.map((post) => (
+        <div key={post.id} className="forum-post p-4 border mb-4 cursor-pointer flex justify-between items-center">
+          <div>
+            <h3 className="text-xl font-bold">{post.user}</h3>
+            <h4 className="text-lg font-semibold">{post.topic}</h4>
+            <p className="text-gray-700">{post.preview}</p>
+            <button
+              onClick={() => handleLike(post.id)}
+              className={`text-red-500 ${post.likes > 0 ? 'fill-current' : ''}`}
+            >
+              <FontAwesomeIcon icon={faHeart} />
+            </button>
+            <span className="ml-2">{post.likes}</span>
+          </div>
+          <button
+            onClick={() => handlePostClick(post.id)}
+            className="bg-pink-500 text-white px-3 py-1 rounded-md hover:bg-pink-600 transition duration-300 focus:outline-none"
+          >
+            Leer más
+          </button>
+        </div>
+      ))}
+
+      {/* Modal para mostrar el detalle del foro */}
+      {selectedPost && (
+        <div className="modal fixed inset-0 bg-gray-700 bg-opacity-50 flex items-center justify-center">
+          <ForumDetail post={selectedPost} onClose={handleCloseDetail} />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default PageForum;
