@@ -4,18 +4,12 @@ import { BrowserRouter as Router, Routes, Route, Navigate, BrowserRouter } from 
 import Login from './pages/Login';
 import Home from './pages/Home';
 import SignUp from './pages/SignUp';
+import AdminDashboard from './DesigningBETA/AdminDashboard';
 
 
 const App = () => {
   return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home/>}/>
-          <Route path="*" element={<Navigate to="/"/>}/>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-        </Routes>
-      </BrowserRouter>
+      <AdminDashboard/>
   );
 };
 
